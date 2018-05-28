@@ -11,8 +11,11 @@ var users = require('./moduls/users'); // get our users model
 var point = require('./moduls/point');
 var auth = require('./moduls/auth');
 
+var morgan= require('morgan');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 var port = 3000;
 app.listen(port, function () {
@@ -21,7 +24,7 @@ app.listen(port, function () {
 
 //-------------------------------------------------------------------------------------------------------------------
 
-var superSecret="ilanaKarin"
+const superSecret='ilanaKarin';
 
 app.use('/user', function(req,res,next){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];

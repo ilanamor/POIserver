@@ -1,8 +1,9 @@
 var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
+var morgan= require('morgan');
 
-var superSecret="ilanaKarin"
+const superSecret="ilanaKarin";
 
 
 router.post('/register', function (req, res) {     //Add User
@@ -18,7 +19,7 @@ router.post('/register', function (req, res) {     //Add User
     var categories = req.body.Category;
     //var category = categories.split(",");
 
-    query1 = "INSERT INTO Users (UserName,Password,FirstName,LastName,City,Country,Email,Answer1,Answer2) VALUES ('"  
+    query1 = "INSERT INTO Users ([UserName],[Password],[FirstName],[LastName],[City],[Country],[Email],[Answer1],[Answer2]) VALUES ('"  
               + username + "','" + password + "','" + firstName + "','" + lastName + "','" + city + "','" + country + "','" + email + "','" + a1 + "','" + a2 + "')";
 
     DButilsAzure.execQuery(query1).then(function (result) {
@@ -44,8 +45,8 @@ router.post('/register', function (req, res) {     //Add User
                 }))
             }*/
         }
-        else
-            res.send(false);
+        else{
+            res.send(false);}
     }).catch(function (err) {
         res.status(400).send(err);
     });
@@ -55,8 +56,8 @@ router.post('/register', function (req, res) {     //Add User
 router.post('/login', function (req,res) {
     var name = req.body.UserName;
     var password = req.body.Password;
-    DButilsAzure.execQuery("Select * from Users Where UserName = '" + name + "' AND Password = '" + password + "'").then(function (result) {
-        if(result.length >0){
+    DButilsAzure.execQuery("Select * from dbo.Users where UserName = '" + name + "' AND Password = '" + password + "'").then(function (result) {
+        if(result.length > 0){
 
             var payload = {
                 UserName: name,
@@ -69,7 +70,7 @@ router.post('/login', function (req,res) {
 
             res.json({
                 success: true,
-                massage:"enjoy your token!",
+                massage:'enjoy your token!',
                 token: token
             });
         }
