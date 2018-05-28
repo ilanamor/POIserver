@@ -18,29 +18,13 @@ router.post('/register', function (req, res) {     //Add User
     var categories = req.body.Category;
     //var category = categories.split(",");
 
-    query1 = "INSERT INTO [Users]" +
-        "([UserName]" +
-        ",[Password]" +
-        ",[FirstName]" +
-        ",[LastName]" +
-        ",[City]" +
-        ",[Country]" +
-        ",[Email]" +
-        ",[Answer1]" +
-        ",[Answer2])" +
-        " VALUES ('" + (username) +
-        ",'" + (password) +
-        "','" + (firstName) +
-        "','" + (lastName) +
-        "','" + (city) +
-        "','" + (country) +
-        "','" + (email) +
-        "','" + (a1) +
-        "','" + (a2) + "')";
+    query1 = "INSERT INTO Users (UserName,Password,FirstName,LastName,City,Country,Email,Answer1,Answer2) VALUES ('"  
+              + username + "','" + password + "','" + firstName + "','" + lastName + "','" + city + "','" + country + "','" + email + "','" + a1 + "','" + a2 + "')";
 
     DButilsAzure.execQuery(query1).then(function (result) {
         if (result == true) {
-            for (let i = 0, p = Promise.resolve(); i < length(categories); i++) {
+            res.send(true);
+           /* for (let i = 0, p = Promise.resolve(); i < length(categories); i++) {
                 p = p.then(_ => new Promise(resolve => {
                     var c = categories[i];
                     query2 = "INSERT INTO [UserCategory]" +
@@ -58,7 +42,7 @@ router.post('/register', function (req, res) {     //Add User
                         }
                     }).catch(function (err) { res.status(400).send(err); });
                 }))
-            }
+            }*/
         }
         else
             res.send(false);
@@ -67,28 +51,32 @@ router.post('/register', function (req, res) {     //Add User
     });
 });
 
-router.post('/User/login', function (req,res,next) {
+
+router.post('/login', function (req,res) {
     var name = req.body.UserName;
     var password = req.body.Password;
     DButilsAzure.execQuery("Select * from Users Where UserName = '" + name + "' AND Password = '" + password + "'").then(function (result) {
         if(result.length >0){
 
-            var ppayload = {
+            var payload = {
                 UserName: name,
                 Password: password
             }
 
             var token= jwt.sign(payload,superSecret,{
                 expiresIn:"1d"
-            })
+            });
 
             res.json({
                 success: true,
-                massage:"enjoy tour token!",
+                massage:"enjoy your token!",
                 token: token
-            })
+            });
         }
-        else
-            res.send(false);
+        else {
+            res.send("connection failed");
+    }
     }).catch(function(err){ res.status(400).send(err);});
 });
+
+module.exports = router;

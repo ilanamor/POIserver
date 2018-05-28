@@ -5,7 +5,11 @@ var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors');
 app.use(cors());
-var DButilsAzure = require('./DButil')
+var DButilsAzure = require('./DButil');
+
+var users = require('./moduls/users'); // get our users model
+var point = require('./moduls/point');
+var auth = require('./moduls/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,10 +21,9 @@ app.listen(port, function () {
 
 //-------------------------------------------------------------------------------------------------------------------
 
-
 var superSecret="ilanaKarin"
 
-router.use('/user', function(req,res,next){
+app.use('/user', function(req,res,next){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
 
@@ -33,9 +36,15 @@ router.use('/user', function(req,res,next){
                 next();
             }
         })
+    } 
+    else {
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
     }
 });
 
-app.use('/user', users)
-app.use('/point', point)
-app.use('/auth', auth)
+app.use('/user', users);
+app.use('/point', point);
+app.use('/auth', auth);

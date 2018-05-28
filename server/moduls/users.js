@@ -2,7 +2,6 @@ var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
 
-
 /*----------------------------------------------------------------------------------------------------------------*/
 
 router.post('/retrivePassword', function (req, res, next) {
@@ -22,7 +21,7 @@ router.post('/retrivePassword', function (req, res, next) {
 /*----------------------------------------------------------------------------------------------------------------*/
 
 router.get('/twoPopularPoints/:UserID', function (req, res, next) {
-    var name = req.body.UserName;
+    var name = req.params.UserName;
     DButilsAzure.execQuery("SELECT b.PointID, b.PointName, b.Pic FROM (SELECT * FROM UserCategory Where UserName='" + name + "')a JOIN CategoryMaxRank b ON a.CategoryID=b.CategoryID LIMIT 2")
         .then(function (result) {
             res.send(result);
@@ -32,7 +31,7 @@ router.get('/twoPopularPoints/:UserID', function (req, res, next) {
 /*----------------------------------------------------------------------------------------------------------------*/
 
 router.get('/twoLastPoints/:UserID', function (req, res, next) {
-    var name = req.body.UserName;
+    var name = req.params.UserName;
     DButilsAzure.execQuery("SELECT b.PointID, b.PointName, b.Pic FROM (SELECT * FROM UserFavorite Where UserName='" + name + "' order by desc Date limit 2) a  JOIN Point b ON a.PointID=b.PointID")
         .then(function (result) {
             res.send(result);
@@ -42,7 +41,7 @@ router.get('/twoLastPoints/:UserID', function (req, res, next) {
 /*----------------------------------------------------------------------------------------------------------------*/
 
 router.get('/showAllFavorite/:UserID', function (req, res, next) {
-    var name = req.body.UserName;
+    var name = req.params.UserName;
     DButilsAzure.execQuery("SELECT b.PointID, b.PointName, b.Pic, b.OrderNum FROM (SELECT * FROM UserFavorite Where UserName='" + name + "') a  JOIN Point b ON a.PointID=b.PointID order by b.OrderNum ASC")
         .then(function (result) {
             res.send(result);
@@ -86,8 +85,8 @@ router.delete('/deleteFromFavorite', function (req, res, next) {
 /*----------------------------------------------------------------------------------------------------------------*/
 
 router.put('/updateFavOrder', function (req, res, next) {
-    var name = req.body.UserName;
-    var points = req.body.points;
+    var name = req.params.UserName;
+    var points = req.params.points;
     var pointsOrder = points.split(",");
 
     for (let i = 0, p = Promise.resolve(); i < length(pointsOrder); i+=2) {
@@ -105,3 +104,5 @@ router.put('/updateFavOrder', function (req, res, next) {
         }))
     }
 });
+
+module.exports = router;

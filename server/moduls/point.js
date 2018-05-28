@@ -2,6 +2,7 @@ var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
 
+
 router.get('/', function (req, res) {
     DButilsAzure.execQuery('SELECT PointName, Pic FROM Point').then(function (result) {
         res.send(result).catch(function (err) { res.status(400).send(err); });
@@ -11,7 +12,7 @@ router.get('/', function (req, res) {
 /*----------------------------------------------------------------------------------------------------------------*/
 //need to fix
 router.get('/:PointID', function (req, res) {
-    var point = req.body.PointID;
+    var point = req.params.PointID;
     DButilsAzure.execQuery("SELECT a.PointID, a.PointName, a.Pic, a.Rank, a.NumOfView, a.Description, b.Review as Review1, c.Review as Review2 FROM Point a JOIN (select Review from Reviews where PointID='"+PointID+"'order by Date DESC LIMIT 2) b on a.PointID=b.PointID JOIN (select Review from Reviews where PointID='"+PointID+"'order by Date DESC LIMIT 2) c on b.PointID=c.PointID Where b.Review<>c.Review")
         .then(function (result) {
             res.send(result);
@@ -20,7 +21,7 @@ router.get('/:PointID', function (req, res) {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 router.put('/:PointID', function (req, res, next) {
-    var point = req.body.PointID;
+    var point = req.params.PointID;
     DButilsAzure.execQuery("SELECT NumOfView FROM Point WHERE PointID='" + point + "'")
         .then(function (result) {
             var num = result[0] + 1;
@@ -32,7 +33,7 @@ router.put('/:PointID', function (req, res, next) {
 /*----------------------------------------------------------------------------------------------------------------*/
 
 router.get('/:CategoryID', function (req, res, next) {
-    var category = req.body.CategoryID;
+    var category = req.params.CategoryID;
     DButilsAzure.execQuery("SELECT PointID, PointName, Pic, FROM Point WHERE CategoryID='" + category + "'")
         .then(function (result) {
             res.send(result);
@@ -96,3 +97,4 @@ router.post('Point/addReviewToPoint', function (req, res, next) {
     }).catch(function (err) { res.status(400).send(err); });
 });
 
+module.exports = router;
