@@ -2,7 +2,7 @@ var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     DButilsAzure.execQuery('SELECT PointName, Pic FROM Point').then(function (result) {
         res.send(result).catch(function (err) { res.status(400).send(err); });
     });
@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 //need to fix
-router.get('/:PointID', function (req, res, next) {
+router.get('/:PointID', function (req, res) {
     var point = req.body.PointID;
     DButilsAzure.execQuery("SELECT a.PointID, a.PointName, a.Pic, a.Rank, a.NumOfView, a.Description, b.Review as Review1, c.Review as Review2 FROM Point a JOIN (select Review from Reviews where PointID='"+PointID+"'order by Date DESC LIMIT 2) b on a.PointID=b.PointID JOIN (select Review from Reviews where PointID='"+PointID+"'order by Date DESC LIMIT 2) c on b.PointID=c.PointID Where b.Review<>c.Review")
         .then(function (result) {
@@ -68,7 +68,7 @@ router.get('/RandomPoints', function (req, res, next) {
 });
 
 /*----------------------------------------------------------------------------------------------------------------*/
-router.post('/addReviewToPoint', function (req, res, next) {
+router.post('Point/addReviewToPoint', function (req, res, next) {
     var point = req.body.PointId;
     var rank = req.body.Rank;
     DButilsAzure.execQuery("select Rank, NumOfRanks, CategoryID from Point where PointID='" + point + "'").then(function (result) {
