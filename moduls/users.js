@@ -2,6 +2,8 @@ var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
 var morgan= require('morgan');
+var bodyParser = require('body-parser');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 /*----------------------------------------------------------------------------------------------------------------*/
 

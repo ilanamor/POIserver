@@ -6,6 +6,7 @@ var app = express();
 var cors = require('cors');
 app.use(cors());
 var DButilsAzure = require('./DButil');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 var users = require('./moduls/users'); // get our users model
 var point = require('./moduls/point');

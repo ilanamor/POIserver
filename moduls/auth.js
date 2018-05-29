@@ -2,6 +2,9 @@ var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
 var morgan= require('morgan');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 const superSecret="ilanaKarin";
 
@@ -56,7 +59,7 @@ router.post('/register', function (req, res) {     //Add User
 router.post('/login', function (req,res) {
     var name = req.body.UserName;
     var password = req.body.Password;
-    DButilsAzure.execQuery("Select * from dbo.Users where UserName = '" + name + "' AND Password = '" + password + "'").then(function (result) {
+    DButilsAzure.execQuery("Select * from Users where UserName = '" + name + "' AND Password = '" + password + "'").then(function (result) {
         if(result.length > 0){
 
             var payload = {
@@ -79,5 +82,7 @@ router.post('/login', function (req,res) {
     }
     }).catch(function(err){ res.status(400).send(err);});
 });
+
+
 
 module.exports = router;

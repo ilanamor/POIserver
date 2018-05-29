@@ -2,6 +2,7 @@ var express = require('express');
 var DButilsAzure = require('../DButil');
 var router = express.Router();
 var morgan= require('morgan');
+var bodyParser = require('body-parser');
 
 
 router.get('/', function (req, res) {
