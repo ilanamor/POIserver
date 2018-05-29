@@ -3,18 +3,21 @@ var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors');
 app.use(cors());
-var DButilsAzure = require('./DButil');
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-
 var users = require('./moduls/users'); // get our users model
 var point = require('./moduls/point');
 var auth = require('./moduls/auth');
-
+var DButilsAzure = require('./DButil');
 var morgan= require('morgan');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+const superSecret='ilanaKarin';
+
+app.use('/reg/user', users)
+app.use('/point', point)
+app.use('/auth', auth)
 
 var port = 3000;
 app.listen(port, function () {
@@ -22,13 +25,10 @@ app.listen(port, function () {
 });
 
 //-------------------------------------------------------------------------------------------------------------------
-app.use('/user', users);
-app.use('/point', point);
-app.use('/auth', auth);
 
-const superSecret='ilanaKarin';
 
-app.use('/user', function(req,res,next){
+/*
+app.use('/reg', function(req,res,next){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
 
@@ -48,5 +48,7 @@ app.use('/user', function(req,res,next){
             message: 'No token provided.'
         });
     }
-});
+});*/
+
+
 
