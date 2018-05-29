@@ -1,5 +1,3 @@
-//this is only an example, handling everything is yours responsibilty !
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -24,6 +22,9 @@ app.listen(port, function () {
 });
 
 //-------------------------------------------------------------------------------------------------------------------
+app.use('/user', users);
+app.use('/point', point);
+app.use('/auth', auth);
 
 const superSecret='ilanaKarin';
 
@@ -49,6 +50,3 @@ app.use('/user', function(req,res,next){
     }
 });
 
-app.use('/user', users);
-app.use('/point', point);
-app.use('/auth', auth);

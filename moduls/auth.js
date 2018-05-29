@@ -55,7 +55,7 @@ router.post('/register', function (req, res) {     //Add User
     });
 });
 
-
+/*
 router.post('/login', function (req,res) {
     var name = req.body.UserName;
     var password = req.body.Password;
@@ -81,7 +81,37 @@ router.post('/login', function (req,res) {
             res.send("connection failed");
     }
     }).catch(function(err){ res.status(400).send(err);});
-});
+});*/
+
+//login post request--works
+router.post('/login', function (req, res) {
+    var nameUser = req.body.UserName;
+    var password = req.body.Password;
+    DButilsAzure.execQuery("Select * from Users Where UserName='" + nameUser + "' AND Password='" + password + "'")
+    .then(function (result) {
+        if (result.length > 0) {
+            //return Token
+            var payload={
+                userName:nameUser,
+                password:password
+            }
+
+            var token=jwt.sign(payload,superSecret,{expiresIn:"1d"});
+
+            res.json({
+                success:true,
+                message:'enjoy your token!',
+                token:token
+            });
+
+        } else {
+            res.send("connection failed");
+        }
+    }).catch(function (err) { res.status(400).send(err); });
+
+    //res.send("done");
+})
+
 
 
 
