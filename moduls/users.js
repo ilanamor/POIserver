@@ -28,7 +28,7 @@ router.get('/twoLastPoints/:UserName', function (req, res) {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 //works
-router.get('/showAllFavorite/:UserName', function (req, res) {
+router.get('/:UserName', function (req, res) {
     var name = req.params.UserName;
     DButilsAzure.execQuery("SELECT b.PointID, b.PointName, b.Pic, a.OrderNum FROM (SELECT * FROM UserFavorite Where UserName='" + name + "') a JOIN Point b ON a.PointID=b.PointID order by a.OrderNum ASC")
         .then(function (result) {
