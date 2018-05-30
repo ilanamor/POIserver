@@ -48,16 +48,9 @@ router.get('/:CategoryID', function (req, res) {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 //works
-/*router.get('/RandomPoints', function (req, res) {
-    DButilsAzure.execQuery("SELECT TOP 2 * from (select PointID, PointName, Pic FROM Point WHERE Rank>='3') a ORDER BY checksum(newid())")
-        .then(function (result) {
-            res.send(result);
-        }).catch(function (err) { res.status(400).send(err); });
-});*/
-
 router.get('/RandomPoints/:Rank', function (req, res) {
     var rank = req.params.Rank;
-    DButilsAzure.execQuery("SELECT TOP 2 PointID, PointName, Pic FROM Point WHERE Rank>='"+rank+"' ORDER BY checksum(newid())")
+    DButilsAzure.execQuery("SELECT TOP 3 PointID, PointName, Pic FROM Point WHERE Rank>='"+rank+"' ORDER BY checksum(newid())")
         .then(function (result) {
             res.send(result);
         }).catch(function (err) { res.status(400).send(err); });
