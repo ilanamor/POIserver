@@ -7,7 +7,7 @@ var DButilsAzure = require('../DButil');
 
 //works
 router.get('/', function (req, res) {
-    DButilsAzure.execQuery('SELECT PointName, Pic FROM Point').then(function (result) {
+    DButilsAzure.execQuery('SELECT PointID, PointName, Pic FROM Point').then(function (result) {
         res.send(result).catch(function (err) { res.status(400).send(err); });
     });
 });
@@ -56,29 +56,6 @@ router.get('/RandomPoints/:Rank', function (req, res) {
         }).catch(function (err) { res.status(400).send(err); });
 });
 
-/*----------------------------------------------------------------------------------------------------------------*/
-//works
-router.post('/addRankToPoint', function (req, res) {
-    var point = req.body.PointID;
-    var rank = req.body.Rank;
-    DButilsAzure.execQuery("select Rank, NumOfRanks, CategoryID from Point where PointID='" + point + "'").then(function (result) {
-        var x = result[0].Rank;
-        var y = result[0].NumOfRanks;
-        var z = result[0].CategoryID;
-        var newRank = ( ((x * y) + parseInt(rank)) / (y + 1) );
-        y = y + 1;
-        DButilsAzure.execQuery("UPDATE Point SET NumOfRanks='" + y + "', Rank='" + newRank + "' WHERE PointID='" + point + "'").then(function (result) {
-            DButilsAzure.execQuery("select Rank from CategoryMaxRank where CategoryID='" + z + "'").then(function (result) {
-                if (newRank > result[0].Rank) {
-                    DButilsAzure.execQuery("UPDATE CategoryMaxRank SET Rank='" + newRank + "', PointID='"+point+"' WHERE CategoryID='" + z + "'").then(function (result) {
-                            res.send(true);
-                    }).catch(function (err) { res.status(400).send(err); });
-                }
-                else
-                    res.send(true);
-            }).catch(function (err) { res.status(400).send(err); });
-        }).catch(function (err) { res.status(400).send(err); });
-    }).catch(function (err) { res.status(400).send(err); });
-});
+
 
 module.exports = router;
